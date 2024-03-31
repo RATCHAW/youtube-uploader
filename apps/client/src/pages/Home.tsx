@@ -1,14 +1,45 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { uploadVideoBody } from "@vu/validation";
+
+interface FormData {
+    thumbnail: File;
+    video: File;
+    title: string;
+    description: string;
+}
 
 const Home = () => {
-    const form = useForm();
+    const form = useForm<FormData>({
+        resolver: zodResolver(uploadVideoBody),
+    });
+
+    const { mutate } = useMutation({
+        mutationKey: ["upload"],
+        mutationFn: async (data: FormData) => {
+            const response = await fetch("/api/upload", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+            const responseData = await response.json();
+            return responseData;
+        },
+    });
+
+    const onSubmit = (data: FormData) => {
+        mutate(data);
+    };
 
     return (
         <div className="flex h-screen justify-center items-center">
-            <form className="flex flex-col space-y-4 w-96">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-4 w-96">
                 <Label>Thumbnail image</Label>
                 <input
                     {...form.register("thumbnail")}
