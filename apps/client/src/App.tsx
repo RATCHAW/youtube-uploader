@@ -1,10 +1,14 @@
 import Providers from "./components/providers";
-import { Button } from "./components/ui/button";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+import routes from "./lib/routes";
+
+const router = createBrowserRouter(routes);
 
 function App() {
     return (
         <Providers>
-            <Button>Click me!</Button>
+            <RouterProvider router={router} />
         </Providers>
     );
 }
