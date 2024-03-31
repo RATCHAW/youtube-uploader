@@ -1,10 +1,11 @@
+import Providers from "./components/providers";
 import { Button } from "./components/ui/button";
 
 function App() {
     return (
-        <div>
-            <Button>Hello World</Button>
-        </div>
+        <Providers>
+            <Button>Click me!</Button>
+        </Providers>
     );
 }
 
