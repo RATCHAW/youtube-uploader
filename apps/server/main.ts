@@ -1,6 +1,8 @@
 import express from "express";
-import env from "./utils/env";
 import { Request, Response, NextFunction } from "express";
+import passport from "passport";
+import { GoogleAuth2Strategy } from "@/strategies/google-strategy";
+import { authRouter } from "@/routes/auth-router";
 
 const app = express();
 
@@ -12,9 +14,10 @@ app.use(
     })
 );
 
-app.get("/", (req, res) => {
-    res.send("Hello World");
-});
+app.use(passport.initialize());
+passport.use(GoogleAuth2Strategy);
+
+app.use("/auth", authRouter);
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
     console.log(error);
@@ -24,5 +27,5 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(4000, () => {
-    console.log("Server is running on port 3000");
+    console.log("Server is running on port 4000");
 });
